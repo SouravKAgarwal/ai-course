@@ -8,16 +8,17 @@ import {
   saveCourseAction,
 } from "@/app/actions/course-actions";
 import CourseForm from "./course-form";
+import type { Course, CourseInput } from "@/types/course-gemini-creation";
 
 export default function CourseGeneratorClient() {
   const { user } = useUser();
   const router = useRouter();
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [generatedCourse, setGeneratedCourse] = useState<any>(null);
-  const [formData, setFormData] = useState({
+  const [generatedCourse, setGeneratedCourse] = useState<Course | null>(null);
+  const [formData, setFormData] = useState<CourseInput>({
     keyword: "",
-    level: "beginner",
+    level: "Beginner",
     chapters_count: 5,
     max_words_description: 150,
     max_words_chapter_text: 500,
@@ -25,16 +26,14 @@ export default function CourseGeneratorClient() {
     include_youtube: true,
   });
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (
+    field: string,
+    value: string | number | boolean,
+  ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleGenerateCourse = async () => {
-    if (!formData.keyword.trim()) {
-      alert("Please enter a course topic");
-      return;
-    }
-
     setIsGenerating(true);
     setGeneratedCourse(null);
 

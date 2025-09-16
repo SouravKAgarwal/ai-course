@@ -194,8 +194,8 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
-                "This platform saved me dozens of hours in course planning. The
-                AI suggestions were incredibly relevant."
+                &quot;This platform saved me dozens of hours in course planning.
+                The AI suggestions were incredibly relevant.&quot;
               </p>
               <div className="flex items-center gap-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">
@@ -221,8 +221,8 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
-                "As a corporate trainer, I need to create courses quickly. This
-                tool has been a game-changer for our team."
+                &quot;As a corporate trainer, I need to create courses quickly.
+                This tool has been a game-changer for our team.&quot;
               </p>
               <div className="flex items-center gap-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">
@@ -248,8 +248,8 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
-                "The quality of the generated content surprised me. It's
-                well-structured and pedagogically sound."
+                &quot;The quality of the generated content surprised me.
+                It&apos;s well-structured and pedagogically sound.&quot;
               </p>
               <div className="flex items-center gap-2">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">

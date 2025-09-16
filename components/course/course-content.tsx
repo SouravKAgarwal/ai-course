@@ -16,12 +16,17 @@ import {
   Youtube,
   ChevronRight,
 } from "lucide-react";
-import { type Course } from "@/types/course-gemini-creation";
+import type {
+  Question,
+  Course,
+  Chapter,
+  Resource,
+} from "@/types/course-gemini-creation";
 import Markdown from "markdown-to-jsx";
 
 interface CourseContentProps {
   course: Course;
-  currentChapter: any;
+  currentChapter: Chapter;
   currentChapterIndex: number;
   activeTab: string;
   onTabChange: (tab: string) => void;
@@ -123,7 +128,7 @@ export function CourseContent({
             {currentChapter.resources.length > 0 ? (
               <div className="space-y-3">
                 {currentChapter.resources.map(
-                  (resource: any, index: number) => (
+                  (resource: Resource, index: number) => (
                     <Card key={index}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
@@ -175,8 +180,8 @@ export function CourseContent({
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
-                    {currentChapter.quiz.questions.map(
-                      (question: any, qIndex: number) => (
+                    {currentChapter.quiz?.questions.map(
+                      (question: Question, qIndex: number) => (
                         <div key={question.id} className="space-y-4">
                           <h3 className="font-medium">
                             Question {qIndex + 1}: {question.prompt}
@@ -190,7 +195,7 @@ export function CourseContent({
                                 >
                                   <input
                                     type={
-                                      question.type === "multiple"
+                                      question.type === "multi-choice"
                                         ? "checkbox"
                                         : "radio"
                                     }

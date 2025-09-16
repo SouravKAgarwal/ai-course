@@ -10,28 +10,7 @@ import { CourseContent } from "./course-content";
 import { ChapterNavigation } from "./course-nav";
 import { getLevelColor } from "@/lib/utils";
 import { updateProgressAction } from "@/app/actions/course-actions";
-
-interface Course {
-  id: string;
-  courseId: string;
-  title: string;
-  subtitle: string;
-  category: string;
-  level: string;
-  duration_weeks: number;
-  estimated_total_minutes: number;
-  description: string;
-  learning_outcomes: string[];
-  image_url: string | null;
-  chapters: any;
-  meta: any;
-  createdAt: Date;
-  progress?: {
-    completed: boolean;
-    currentChapter: number;
-    progressPercentage: number;
-  };
-}
+import { Course } from "@/types/course-gemini-creation";
 
 interface CourseClientProps {
   initialCourse: Course;
@@ -104,8 +83,6 @@ export default function CourseClient({
   };
 
   const currentChapter = course.chapters[currentChapterIndex];
-  const isChapterCompleted =
-    course.progress && course.progress.currentChapter > currentChapterIndex + 1;
   const isLastChapter = currentChapterIndex === course.chapters.length - 1;
 
   return (

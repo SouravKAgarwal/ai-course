@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { Course } from "@/types/course-gemini-creation";
+import { type Course } from "@/types/course-gemini-creation";
 import { CourseCard } from "./course-card";
 import { EmptyState } from "./empty-state";
 
@@ -22,10 +22,10 @@ interface MyCoursesClientProps {
   initialCourses: Course[];
 }
 
-export default function MyCourses({ initialCourses }: MyCoursesClientProps) {
-  const [courses, setCourses] = useState<Course[]>(initialCourses);
-  const [filteredCourses, setFilteredCourses] =
-    useState<Course[]>(initialCourses);
+export default function MyCourses({
+  initialCourses: courses,
+}: MyCoursesClientProps) {
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [levelFilter, setLevelFilter] = useState<string>("all");

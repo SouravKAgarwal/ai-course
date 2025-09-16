@@ -4,8 +4,15 @@ import { revalidatePath } from "next/cache";
 import { generateCourseContent } from "@/lib/gemini";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
+import { calculateProgressPercentage } from "@/lib/utils";
+import {
+  Course,
+  CourseInput,
+  UpdateProgressParams,
+} from "@/types/course-gemini-creation";
+import { Prisma } from "@/prisma/generated/prisma";
 
-export async function generateCourseAction(input: any) {
+export async function generateCourseAction(input: CourseInput) {
   try {
     const course = await generateCourseContent(input);
     return { course, error: null };
@@ -19,7 +26,7 @@ export async function generateCourseAction(input: any) {
   }
 }
 
-export async function saveCourseAction(courseData: any) {
+export async function saveCourseAction(courseData: Course) {
   try {
     const clerkUser = await currentUser();
 
@@ -61,8 +68,7 @@ export async function saveCourseAction(courseData: any) {
         description: courseData.description,
         learning_outcomes: courseData.learning_outcomes,
         image_url: null,
-        chapters: courseData.chapters,
-        meta: courseData.meta,
+        chapters: courseData.chapters as Prisma.InputJsonValue[],
         createdBy: dbUser.id,
       },
     });
@@ -141,7 +147,7 @@ export async function getCourseAction(
                   JSON.parse(JSON.stringify(course.chapters)).length) *
                   100,
               ),
-              lastAccessed: progress.updatedAt.toISOString(),
+              lastAccessed: progress.updatedAt,
             }
           : undefined;
       }
@@ -211,14 +217,6 @@ export async function getCourseAction(
       error: error instanceof Error ? error.message : "Failed to fetch courses",
     };
   }
-}
-
-interface UpdateProgressParams {
-  courseId: string;
-  userId: string;
-  chapterIndex: number;
-  markCompleted?: boolean;
-  score?: number;
 }
 
 export async function updateProgressAction({
@@ -382,16 +380,4 @@ export async function updateProgressAction({
         error instanceof Error ? error.message : "Failed to update progress",
     };
   }
-}
-
-function calculateProgressPercentage(
-  progress: any,
-  totalChapters: number,
-): number {
-  if (totalChapters === 0) return 0;
-
-  const chaptersData = progress.chapters as { completed: boolean[] };
-  const completedChapters = chaptersData.completed.filter(Boolean).length;
-
-  return Math.round((completedChapters / totalChapters) * 100);
 }

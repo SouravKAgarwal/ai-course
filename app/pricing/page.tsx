@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/card";
 import {
   Check,
-  Zap,
   Crown,
   Building,
   Sparkles,

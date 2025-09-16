@@ -1,3 +1,4 @@
+import { type JsonValue } from "@/prisma/generated/prisma/runtime/library";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -17,3 +18,15 @@ export const getLevelColor = (level: string) => {
       return "bg-gray-100 text-gray-800";
   }
 };
+
+export function calculateProgressPercentage(
+  progress: { chapters: JsonValue },
+  totalChapters: number,
+): number {
+  if (totalChapters === 0) return 0;
+
+  const chaptersData = progress.chapters as { completed: boolean[] };
+  const completedChapters = chaptersData.completed.filter(Boolean).length;
+
+  return Math.round((completedChapters / totalChapters) * 100);
+}

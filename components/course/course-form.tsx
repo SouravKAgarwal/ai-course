@@ -1,7 +1,5 @@
-// components/course-generator-layout.tsx
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +21,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Loader2, Zap, Sparkles, Eye, Settings, BookOpen } from "lucide-react";
+import type { Course } from "@/types/course-gemini-creation";
 
 interface CourseFormProps {
   formData: {
@@ -34,12 +33,12 @@ interface CourseFormProps {
     include_quizzes: boolean;
     include_youtube: boolean;
   };
-  onInputChange: (field: string, value: any) => void;
-  onGenerate: () => void;
+  onInputChange: (field: string, value: string | number | boolean) => void;
+  onGenerate: () => Promise<void>;
   isGenerating: boolean;
-  generatedCourse: any;
+  generatedCourse: Course | null;
   isSaving: boolean;
-  onSave: () => void;
+  onSave: () => Promise<void>;
 }
 
 const CourseForm = ({
@@ -51,12 +50,6 @@ const CourseForm = ({
   isSaving,
   onSave,
 }: CourseFormProps) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -104,16 +97,6 @@ const CourseForm = ({
       },
     },
   };
-
-  if (!isMounted) {
-    return (
-      <div className="container max-w-7xl bg-white py-8">
-        <div className="flex h-96 items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-black" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container max-w-7xl bg-white py-8">
@@ -468,9 +451,19 @@ const CourseForm = ({
                         </h4>
                         <div className="max-h-64 space-y-3 overflow-y-auto">
                           {generatedCourse.chapters.map(
-                            (chapter: any, index: number) => (
+                            (
+                              {
+                                title,
+                                index,
+                                summary,
+                                estimated_minutes,
+                                quiz,
+                                youtube_url,
+                              },
+                              idx: number,
+                            ) => (
                               <motion.div
-                                key={index}
+                                key={idx}
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ delay: 0.7 + index * 0.1 }}
@@ -478,26 +471,26 @@ const CourseForm = ({
                               >
                                 <div className="flex items-center gap-2">
                                   <div className="flex h-6 w-6 items-center justify-center rounded-full border border-black bg-yellow-300 text-xs font-bold text-black">
-                                    {chapter.index}
+                                    {index}
                                   </div>
                                   <h5 className="text-sm font-bold text-black">
-                                    {chapter.title}
+                                    {title}
                                   </h5>
                                 </div>
                                 <p className="mt-1 text-xs text-black">
-                                  {chapter.summary}
+                                  {summary}
                                 </p>
                                 <div className="mt-2 flex justify-between text-xs">
                                   <span className="text-black">
-                                    {chapter.estimated_minutes} min
+                                    {estimated_minutes} min
                                   </span>
                                   <div className="flex gap-2">
-                                    {chapter.quiz && (
+                                    {quiz && (
                                       <span className="rounded-full border border-blue-900 bg-blue-200 px-2 py-1 text-blue-900">
                                         Quiz
                                       </span>
                                     )}
-                                    {chapter.youtube_url && (
+                                    {youtube_url && (
                                       <span className="rounded-full border border-red-900 bg-red-200 px-2 py-1 text-red-900">
                                         Video
                                       </span>

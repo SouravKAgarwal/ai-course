@@ -1,9 +1,8 @@
-import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Merriweather } from "next/font/google";
-import { cn } from "@/lib/utils";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import "./globals.css";
 
 const merriweather = Merriweather({ subsets: ["latin"] });
 

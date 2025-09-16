@@ -151,7 +151,7 @@ export async function generateCourseContent(input: CourseInput): Promise<Course>
     } words.
     - ${
       input.include_quizzes
-        ? 'Include a quiz with at least one question in each chapter.'
+        ? 'Include a quiz with at least three question in each chapter.'
         : 'Do not include quizzes.'
     }
     - ${

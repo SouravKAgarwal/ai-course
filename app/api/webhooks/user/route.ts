@@ -1,8 +1,9 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import type { SessionJSON, UserJSON, WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/prisma/generated/prisma";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
@@ -87,9 +88,7 @@ export async function POST(req: Request) {
   }
 }
 
-async function handleUserCreated(data: any) {
-  const user = data;
-
+async function handleUserCreated(user: UserJSON) {
   const emailVerified =
     user.email_addresses?.[0]?.verification?.status === "verified"
       ? new Date()
@@ -126,9 +125,7 @@ async function handleUserCreated(data: any) {
   }
 }
 
-async function handleUserUpdated(data: any) {
-  const user = data;
-
+async function handleUserUpdated(user: UserJSON) {
   const emailVerified =
     user.email_addresses?.[0]?.verification?.status === "verified"
       ? new Date()
@@ -158,9 +155,7 @@ async function handleUserUpdated(data: any) {
   }
 }
 
-async function handleUserDeleted(data: any) {
-  const user = data;
-
+async function handleUserDeleted(user: UserJSON) {
   try {
     await prisma.session.deleteMany({
       where: { userId: user.id },
@@ -176,11 +171,8 @@ async function handleUserDeleted(data: any) {
   }
 }
 
-async function handleSessionCreated(data: any) {
-  const session = data;
-
+async function handleSessionCreated(session: SessionJSON) {
   try {
-    // Check if user exists first
     const userExists = await prisma.user.findUnique({
       where: { id: session.user_id },
     });
@@ -215,53 +207,53 @@ async function handleSessionCreated(data: any) {
   }
 }
 
-async function handleSessionEnded(data: any) {
-  const session = data;
-
+async function handleSessionEnded(session: SessionJSON) {
   try {
     await prisma.session.delete({
       where: { id: session.id },
     });
     console.log(`Session ended: ${session.id}`);
-  } catch (error: any) {
-    if (error.code === "P2025") {
-      console.log(`Session ${session.id} was already deleted`);
-    } else {
-      console.error("Error ending session:", error);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        console.log(`Session ${session.id} was already deleted`);
+      } else {
+        console.error("Prisma error ending session:", error);
+      }
     }
   }
 }
 
-async function handleSessionRemoved(data: any) {
-  const session = data;
-
+async function handleSessionRemoved(session: SessionJSON) {
   try {
     await prisma.session.delete({
       where: { id: session.id },
     });
     console.log(`Session removed: ${session.id}`);
-  } catch (error: any) {
-    if (error.code === "P2025") {
-      console.log(`Session ${session.id} was already deleted`);
-    } else {
-      console.error("Error removing session:", error);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        console.log(`Session ${session.id} was already deleted`);
+      } else {
+        console.error("Error removing session:", error);
+      }
     }
   }
 }
 
-async function handleSessionRevoked(data: any) {
-  const session = data;
-
+async function handleSessionRevoked(session: SessionJSON) {
   try {
     await prisma.session.delete({
       where: { id: session.id },
     });
     console.log(`Session revoked: ${session.id}`);
-  } catch (error: any) {
-    if (error.code === "P2025") {
-      console.log(`Session ${session.id} was already deleted`);
-    } else {
-      console.error("Error revoking session:", error);
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2025") {
+        console.log(`Session ${session.id} was already deleted`);
+      } else {
+        console.error("Error revoking session:", error);
+      }
     }
   }
 }

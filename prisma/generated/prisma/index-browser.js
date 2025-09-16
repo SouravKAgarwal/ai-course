@@ -120,21 +120,6 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.AccountScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  type: 'type',
-  provider: 'provider',
-  providerAccountId: 'providerAccountId',
-  refresh_token: 'refresh_token',
-  access_token: 'access_token',
-  expires_at: 'expires_at',
-  token_type: 'token_type',
-  scope: 'scope',
-  id_token: 'id_token',
-  session_state: 'session_state'
-};
-
 exports.Prisma.SessionScalarFieldEnum = {
   id: 'id',
   sessionToken: 'sessionToken',
@@ -169,7 +154,6 @@ exports.Prisma.CourseScalarFieldEnum = {
   learning_outcomes: 'learning_outcomes',
   image_url: 'image_url',
   chapters: 'chapters',
-  meta: 'meta',
   createdBy: 'createdBy',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -214,7 +198,6 @@ exports.Prisma.JsonNullValueFilter = {
 
 
 exports.Prisma.ModelName = {
-  Account: 'Account',
   Session: 'Session',
   User: 'User',
   VerificationToken: 'VerificationToken',
