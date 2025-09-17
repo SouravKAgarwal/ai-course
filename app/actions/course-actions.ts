@@ -96,7 +96,7 @@ export async function saveCourseAction(courseData: Course) {
 }
 
 export async function getCourseAction(
-  userId: string,
+  userId: string ,
   courseId?: string,
   options: {
     includeProgress?: boolean;

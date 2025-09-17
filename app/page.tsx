@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,7 +17,65 @@ import {
   Brain,
   GraduationCap,
 } from "lucide-react";
-import Image from "next/image";
+
+export const revalidate = 60;
+
+const features = [
+  {
+    icon: <Zap className="h-6 w-6 text-black" />,
+    title: "Lightning Fast",
+    description: "Generate complete course outlines in seconds, not hours",
+  },
+  {
+    icon: <Brain className="h-6 w-6 text-black" />,
+    title: "AI-Powered",
+    description: "Advanced algorithms create pedagogically sound content",
+  },
+  {
+    icon: <GraduationCap className="h-6 w-6 text-black" />,
+    title: "Expert Quality",
+    description: "Courses that meet educational standards and best practices",
+  },
+];
+
+const steps = [
+  {
+    number: 1,
+    title: "Describe Your Topic",
+    description:
+      "Tell us what you want to teach or provide some basic information about your subject.",
+  },
+  {
+    number: 2,
+    title: "AI Generates Content",
+    description:
+      "Our AI analyzes your topic and creates a structured curriculum with learning objectives.",
+  },
+  {
+    number: 3,
+    title: "Customize & Export",
+    description:
+      "Refine the generated content and export it to your preferred format.",
+  },
+];
+
+const testimonials = [
+  {
+    text: "This platform saved me dozens of hours in course planning. The AI suggestions were incredibly relevant.",
+    name: "Sarah Johnson",
+    role: "University Professor",
+  },
+  {
+    text: "As a corporate trainer, I need to create courses quickly. This tool has been a game-changer for our team.",
+    name: "Michael Chen",
+    role: "Training Manager",
+  },
+  {
+    text: "The quality of the generated content surprised me. It's well-structured and pedagogically sound.",
+    name: "Emma Rodriguez",
+    role: "Online Educator",
+  },
+];
 
 export default function HomePage() {
   return (
@@ -29,14 +88,15 @@ export default function HomePage() {
           </div>
           <h1 className="text-4xl font-black tracking-tight sm:text-5xl md:text-6xl">
             Create Stunning Courses{" "}
-            <span className="text-red-400">in Seconds</span>
+            <span className="text-red-600">in Seconds</span>
           </h1>
-          <p className="max-w-[700px] text-lg font-medium text-black sm:text-xl">
+          <p className="desc">
             Turn any topic into a structured, engaging curriculum with our
             advanced AI technology. Perfect for educators, trainers, and content
             creators.
           </p>
         </div>
+
         <div className="flex flex-col gap-4 sm:flex-row">
           <Button
             asChild
@@ -57,222 +117,120 @@ export default function HomePage() {
             <Link href="/pricing">View Pricing</Link>
           </Button>
         </div>
+
         <div className="mt-8 rounded-xl border-4 border-black bg-white shadow-[8px_8px_0_0_rgb(0,0,0)]">
-          <div className="overflow-hidden">
-            <div className="flex h-[450px] w-full items-center justify-center">
-              <Image
-                src="/generator.jpeg"
-                width={786}
-                height={96}
-                alt="Preview"
-              />
-            </div>
+          <div className="flex h-[200px] w-full items-center justify-center overflow-hidden md:h-[450px]">
+            <Image
+              src="/generator.webp"
+              width={786}
+              height={450}
+              alt="Preview"
+              priority
+              placeholder="blur"
+              blurDataURL="data:image/webp;base64,UklGRqYDAABXRUJQVlA4WAoAAAAgAAAAFwIAJAEASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDhMuAEAAC8XAkkAByKQTXb+0BPYxV2c/+ywQ4IAsEngFIKVm7u7L4U00OLy/1/pfWCSiP4TSNqY4HuMdV3XdV2XZVmWZZnneZ6naRrHcRyGoe/7ruvatmka751zdV1XVcVsrbVEVJZlWRRFYYwxxhhERERERERERERjLpOK4thXluUxlYiIiKy11tojgZmZmZmZmZmZmfkcd952ySQiIiIiIiIiIiIiulTcnlBVVVXVdV3Xzjnnvfe+aZqmadq2bdu2bduu67qu2z+9DmmOa0/fXq/dbj1ONYi/f/38+eP7t29fv3z+/Onjh/fv3r198/rVyxcvnj97+uTxo0cPH9y/d+/unZubXOssS5MkjqMIAMIwDIIgUEoppZRSSimllFIqOOaEYRgCAERRFMVxHCdJkqRpmmZZlmWZ1lprrbXWWud5nue3DdnjztvS9NiZbIOP0njbfuRG0dZxigYAAAAAAAAAOCUeu66dl9Zr7hZxjb5Uif/Ef+I/8Z/4T/wn/hP/if/Ef+I/8Z/4T/wn/hP/if/Ef+I/8Z/4T/wn/hP/if/Ef+I/8Z/4T/wn/hP/if/Ef+I/8Z/47w8h8V8G"
+              sizes="(max-width: 768px) 100vw, 786px"
+              className="object-contain"
+            />
           </div>
         </div>
       </section>
 
       <section className="flex flex-col gap-8 px-4">
         <div className="flex flex-col gap-4 text-center">
-          <h2 className="mx-auto w-fit px-4 py-2 text-3xl font-black tracking-tight sm:text-4xl">
-            Why Choose CourseGenAI
-          </h2>
-          <p className="mx-auto max-w-[700px] font-medium text-black">
+          <h2 className="section-title">Why Choose CourseGenAI</h2>
+          <p className="desc">
             Our AI-powered platform takes the hassle out of course creation, so
             you can focus on teaching.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <Card className="flex flex-col border-4 border-black bg-white text-center shadow-[6px_6px_0_0_rgb(0,0,0)] transition-all hover:shadow-[8px_8px_0_0_rgb(0,0,0)]">
-            <CardHeader>
-              <div className="flex justify-center">
-                <div className="rounded-full border-2 border-black bg-red-400 p-3">
-                  <Zap className="h-6 w-6 text-black" />
+          {features.map((f, i) => (
+            <Card key={i} className="card-style">
+              <CardHeader>
+                <div className="flex justify-center">
+                  <div className="rounded-full border-2 border-black bg-red-400 p-3">
+                    {f.icon}
+                  </div>
                 </div>
-              </div>
-              <CardTitle className="text-xl font-black">
-                Lightning Fast
-              </CardTitle>
-              <CardDescription className="font-medium text-black">
-                Generate complete course outlines in seconds, not hours
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="flex flex-col border-4 border-black bg-white text-center shadow-[6px_6px_0_0_rgb(0,0,0)] transition-all hover:shadow-[8px_8px_0_0_rgb(0,0,0)]">
-            <CardHeader>
-              <div className="flex justify-center">
-                <div className="rounded-full border-2 border-black bg-red-400 p-3">
-                  <Brain className="h-6 w-6 text-black" />
-                </div>
-              </div>
-              <CardTitle className="text-xl font-black">AI-Powered</CardTitle>
-              <CardDescription className="font-medium text-black">
-                Advanced algorithms create pedagogically sound content
-              </CardDescription>
-            </CardHeader>
-          </Card>
-          <Card className="flex flex-col border-4 border-black bg-white text-center shadow-[6px_6px_0_0_rgb(0,0,0)] transition-all hover:shadow-[8px_8px_0_0_rgb(0,0,0)]">
-            <CardHeader>
-              <div className="flex justify-center">
-                <div className="rounded-full border-2 border-black bg-red-400 p-3">
-                  <GraduationCap className="h-6 w-6 text-black" />
-                </div>
-              </div>
-              <CardTitle className="text-xl font-black">
-                Expert Quality
-              </CardTitle>
-              <CardDescription className="font-medium text-black">
-                Courses that meet educational standards and best practices
-              </CardDescription>
-            </CardHeader>
-          </Card>
+                <CardTitle className="text-xl font-black">{f.title}</CardTitle>
+                <CardDescription className="desc text-base">
+                  {f.description}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          ))}
         </div>
       </section>
 
       <section className="flex flex-col gap-8 px-4">
         <div className="flex flex-col gap-4 text-center">
-          <h2 className="mx-auto w-fit px-4 py-2 text-3xl font-black tracking-tight sm:text-4xl">
-            How It Works
-          </h2>
-          <p className="mx-auto max-w-[700px] font-medium text-black">
+          <h2 className="section-title">How It Works</h2>
+          <p className="desc">
             Creating a course has never been easier. Just follow these simple
             steps.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          <div className="flex flex-col items-center gap-4 border-4 border-black bg-white p-6 text-center shadow-[6px_6px_0_0_rgb(0,0,0)]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-black bg-red-400 font-black text-black">
-              1
+          {steps.map((s, i) => (
+            <div
+              key={i}
+              className="card-style flex flex-col items-center gap-4 p-6 text-center hover:shadow-[8px_8px_0_0_rgb(0,0,0)]"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-black bg-red-400 font-black text-black">
+                {s.number}
+              </div>
+              <h3 className="text-xl font-black">{s.title}</h3>
+              <p className="desc text-base">{s.description}</p>
             </div>
-            <h3 className="text-xl font-black">Describe Your Topic</h3>
-            <p className="font-medium text-black">
-              Tell us what you want to teach or provide some basic information
-              about your subject.
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-4 border-4 border-black bg-white p-6 text-center shadow-[6px_6px_0_0_rgb(0,0,0)]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-black bg-red-400 font-black text-black">
-              2
-            </div>
-            <h3 className="text-xl font-black">AI Generates Content</h3>
-            <p className="font-medium text-black">
-              Our AI analyzes your topic and creates a structured curriculum
-              with learning objectives.
-            </p>
-          </div>
-          <div className="flex flex-col items-center gap-4 border-4 border-black bg-white p-6 text-center shadow-[6px_6px_0_0_rgb(0,0,0)]">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-black bg-red-400 font-black text-black">
-              3
-            </div>
-            <h3 className="text-xl font-black">Customize & Export</h3>
-            <p className="font-medium text-black">
-              Refine the generated content and export it to your preferred
-              format.
-            </p>
-          </div>
+          ))}
         </div>
       </section>
 
       <section className="flex flex-col gap-8 px-4">
         <div className="flex flex-col gap-4 text-center">
-          <h2 className="mx-auto w-fit px-4 py-2 text-3xl font-black tracking-tight sm:text-4xl">
-            What Our Users Say
-          </h2>
-          <p className="mx-auto max-w-[700px] font-medium text-black">
+          <h2 className="section-title">What Our Users Say</h2>
+          <p className="desc">
             Join thousands of educators and content creators who are
             transforming their teaching.
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="border-4 border-black bg-white shadow-[6px_6px_0_0_rgb(0,0,0)]">
-            <CardContent className="pt-6">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 fill-yellow-400 text-black"
-                  />
-                ))}
-              </div>
-              <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
-                &quot;This platform saved me dozens of hours in course planning.
-                The AI suggestions were incredibly relevant.&quot;
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">
-                  <Users className="h-5 w-5 text-black" />
+          {testimonials.map((t, i) => (
+            <Card key={i} className="card-style">
+              <CardContent className="pt-6">
+                <div className="mb-4 flex gap-1">
+                  {[...Array(5)].map((_, idx) => (
+                    <Star
+                      key={idx}
+                      className="h-4 w-4 fill-yellow-400 text-black"
+                    />
+                  ))}
                 </div>
-                <div>
-                  <p className="font-black">Sarah Johnson</p>
-                  <p className="text-sm font-medium text-black">
-                    University Professor
-                  </p>
+                <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
+                  &quot;{t.text}&quot;
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">
+                    <Users className="h-5 w-5 text-black" />
+                  </div>
+                  <div>
+                    <p className="font-black">{t.name}</p>
+                    <p className="desc text-sm">{t.role}</p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-4 border-black bg-white shadow-[6px_6px_0_0_rgb(0,0,0)]">
-            <CardContent className="pt-6">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 fill-yellow-400 text-black"
-                  />
-                ))}
-              </div>
-              <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
-                &quot;As a corporate trainer, I need to create courses quickly.
-                This tool has been a game-changer for our team.&quot;
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">
-                  <Users className="h-5 w-5 text-black" />
-                </div>
-                <div>
-                  <p className="font-black">Michael Chen</p>
-                  <p className="text-sm font-medium text-black">
-                    Training Manager
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="border-4 border-black bg-white shadow-[6px_6px_0_0_rgb(0,0,0)]">
-            <CardContent className="pt-6">
-              <div className="mb-4 flex gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 fill-yellow-400 text-black"
-                  />
-                ))}
-              </div>
-              <p className="mb-4 border-2 border-black bg-gray-100 p-3 font-medium italic">
-                &quot;The quality of the generated content surprised me.
-                It&apos;s well-structured and pedagogically sound.&quot;
-              </p>
-              <div className="flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-yellow-300">
-                  <Users className="h-5 w-5 text-black" />
-                </div>
-                <div>
-                  <p className="font-black">Emma Rodriguez</p>
-                  <p className="text-sm font-medium text-black">
-                    Online Educator
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </section>
 
+      {/* CTA Section */}
       <section className="mx-4 rounded-lg border-4 border-black bg-yellow-300 p-8 shadow-[8px_8px_0_0_rgb(0,0,0)] md:p-12">
         <div className="flex flex-col items-center gap-6 text-center">
           <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
             Ready to Create Your Course?
           </h2>
-          <p className="max-w-[600px] font-medium text-black">
+          <p className="desc">
             Join thousands of educators and trainers who are saving time and
             enhancing their teaching with AI.
           </p>
@@ -287,14 +245,17 @@ export default function HomePage() {
             </Link>
           </Button>
           <div className="flex flex-col items-center gap-4 text-sm font-medium text-black sm:flex-row">
-            <div className="flex items-center gap-1 border-2 border-black bg-white px-2 py-1">
-              <CheckCircle className="h-4 w-4 text-black" />
-              No credit card required
-            </div>
-            <div className="flex items-center gap-1 border-2 border-black bg-white px-2 py-1">
-              <CheckCircle className="h-4 w-4 text-black" />
-              Free plan available
-            </div>
+            {["No credit card required", "Free plan available"].map(
+              (item, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-1 border-2 border-black bg-white px-2 py-1"
+                >
+                  <CheckCircle className="h-4 w-4 text-black" />
+                  {item}
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>

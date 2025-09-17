@@ -148,4 +148,16 @@
       content: "" !important;
     }
   }
+
+  .card-style {
+    @apply flex flex-col border-4 border-black bg-white text-center !shadow-[4px_4px_0_0_rgb(0,0,0)] !transition-all hover:!shadow-[8px_8px_0_0_rgb(0,0,0)];
+  }
+
+  .section-title {
+    @apply mx-auto w-fit px-4 py-2 text-3xl font-black tracking-tight sm:text-4xl;
+  }
+
+  .desc {
+    @apply mx-auto max-w-[700px] text-lg font-medium text-black/85 sm:text-xl;
+  }
 }

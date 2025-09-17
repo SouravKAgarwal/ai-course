@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -87,49 +86,57 @@ export default function CourseClient({
 
   return (
     <div className="container max-w-6xl py-8">
-      <div className="flex flex-col gap-8">
-        {/* Header */}
-        <div className="flex flex-col gap-4">
-          <Button asChild variant="ghost" className="w-fit pl-0">
-            <Link href="/courses">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to My Courses
-            </Link>
-          </Button>
-
+      <Button
+        asChild
+        variant="ghost"
+        className="w-fit pl-0 mb-4 hover:bg-yellow-100"
+      >
+        <Link href="/courses">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to My Courses
+        </Link>
+      </Button>
+      <div className="mx-auto flex flex-col gap-8">
+        <div className="flex flex-col gap-4 rounded-lg border-2 border-black bg-white p-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-3">
-              <Badge className={getLevelColor(course.level)}>
+              <Badge
+                className={`${getLevelColor(course.level)} border border-black font-bold`}
+              >
                 {course.level}
               </Badge>
-              <span className="text-muted-foreground text-sm">
+              <span className="text-sm font-medium">
                 {course.estimated_total_minutes} min • {course.duration_weeks}{" "}
                 weeks
               </span>
             </div>
 
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="border-b-2 border-black pb-2 text-3xl font-bold tracking-tight">
               {course.title}
             </h1>
-            <p className="text-muted-foreground">{course.subtitle}</p>
+            <p className="font-medium text-gray-700">{course.subtitle}</p>
           </div>
 
           {/* Progress Bar */}
           {course.progress && (
-            <div className="space-y-2">
-              <div className="text-muted-foreground flex justify-between text-sm">
+            <div className="space-y-2 rounded-md border border-black bg-yellow-50 p-4">
+              <div className="flex justify-between text-sm font-bold">
                 <span>Course Progress</span>
                 <span>{course.progress.progressPercentage}% Complete</span>
               </div>
-              <Progress
-                value={course.progress.progressPercentage}
-                className="h-2"
-              />
-              <div className="text-muted-foreground text-sm">
+              <div className="h-4 w-full rounded-full border border-black bg-white">
+                <div
+                  className="h-full rounded-full border-r border-black bg-green-500"
+                  style={{ width: `${course.progress.progressPercentage}%` }}
+                ></div>
+              </div>
+              <div className="text-sm font-medium">
                 Chapter {course.progress.currentChapter} of{" "}
                 {course.chapters.length}
                 {course.progress.completed && (
-                  <span className="ml-2 text-green-600">• Completed</span>
+                  <span className="ml-2 font-bold text-green-700">
+                    • Completed
+                  </span>
                 )}
               </div>
             </div>
