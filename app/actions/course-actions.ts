@@ -4,11 +4,9 @@ import { revalidatePath } from "next/cache";
 import { generateCourseContent } from "@/lib/gemini";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { calculateProgressPercentage } from "@/lib/utils";
 import {
   Course,
   CourseInput,
-  UpdateProgressParams,
 } from "@/types/course-gemini-creation";
 import { Prisma } from "@/prisma/generated/prisma";
 
@@ -95,27 +93,12 @@ export async function saveCourseAction(courseData: Course) {
   }
 }
 
-export async function getCourseAction(
-  userId: string ,
-  courseId?: string,
-  options: {
-    includeProgress?: boolean;
-    sortBy?: "createdAt" | "updatedAt" | "title";
-    sortOrder?: "asc" | "desc";
-  } = {},
-) {
+export async function getCourseAction(courseId?: string) {
   try {
-    const {
-      includeProgress = true,
-      sortBy = "createdAt",
-      sortOrder = "desc",
-    } = options;
-
     if (courseId) {
       const course = await prisma.course.findUnique({
         where: {
           courseId: courseId,
-          createdBy: userId,
         },
       });
 
@@ -127,85 +110,21 @@ export async function getCourseAction(
         };
       }
 
-      let progressData = undefined;
-      if (includeProgress) {
-        const progress = await prisma.progress.findUnique({
-          where: {
-            userId_courseId: {
-              userId: userId,
-              courseId: course.id,
-            },
-          },
-        });
-
-        progressData = progress
-          ? {
-              completed: progress.completed,
-              currentChapter: progress.currentChapter,
-              progressPercentage: Math.round(
-                (progress.currentChapter /
-                  JSON.parse(JSON.stringify(course.chapters)).length) *
-                  100,
-              ),
-              lastAccessed: progress.updatedAt,
-            }
-          : undefined;
-      }
-
       return {
-        course: {
-          ...course,
-          progress: progressData,
-        },
+        course: course,
         courses: null,
         error: null,
       };
     } else {
       const courses = await prisma.course.findMany({
-        where: {
-          createdBy: userId,
-        },
         orderBy: {
-          [sortBy]: sortOrder,
+          createdAt: "desc",
         },
       });
 
-      let coursesWithProgress = courses;
-
-      if (includeProgress) {
-        coursesWithProgress = await Promise.all(
-          courses.map(async (course) => {
-            const progress = await prisma.progress.findUnique({
-              where: {
-                userId_courseId: {
-                  userId: userId,
-                  courseId: course.id,
-                },
-              },
-            });
-
-            return {
-              ...course,
-              progress: progress
-                ? {
-                    completed: progress.completed,
-                    currentChapter: progress.currentChapter,
-                    progressPercentage: Math.round(
-                      (progress.currentChapter /
-                        JSON.parse(JSON.stringify(course.chapters)).length) *
-                        100,
-                    ),
-                    lastAccessed: progress.updatedAt.toISOString(),
-                  }
-                : undefined,
-            };
-          }),
-        );
-      }
-
       return {
         course: null,
-        courses: coursesWithProgress,
+        courses: courses,
         error: null,
       };
     }
@@ -215,169 +134,6 @@ export async function getCourseAction(
       course: null,
       courses: null,
       error: error instanceof Error ? error.message : "Failed to fetch courses",
-    };
-  }
-}
-
-export async function updateProgressAction({
-  courseId,
-  userId,
-  chapterIndex,
-  markCompleted = false,
-  score,
-}: UpdateProgressParams) {
-  try {
-    if (chapterIndex < 0) {
-      return {
-        success: false,
-        error: "Invalid chapter index",
-      };
-    }
-
-    const course = await prisma.course.findUnique({
-      where: { id: courseId },
-      select: { chapters: true },
-    });
-
-    if (!course) {
-      return {
-        success: false,
-        error: "Course not found",
-      };
-    }
-
-    const totalChapters = Array.isArray(course.chapters)
-      ? course.chapters.length
-      : 0;
-
-    if (chapterIndex >= totalChapters) {
-      return {
-        success: false,
-        error: "Chapter index exceeds total chapters in course",
-      };
-    }
-
-    const progress = await prisma.progress.findUnique({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId,
-        },
-      },
-    });
-
-    const defaultChapters = {
-      completed: Array(totalChapters).fill(false),
-      scores: Array(totalChapters).fill(0),
-    };
-
-    if (!progress) {
-      const completedArray = Array(totalChapters).fill(false);
-
-      for (let i = 0; i <= chapterIndex; i++) {
-        if (i < totalChapters) {
-          completedArray[i] = true;
-        }
-      }
-
-      const newProgress = await prisma.progress.create({
-        data: {
-          userId,
-          courseId,
-          currentChapter: Math.min(chapterIndex, totalChapters - 1),
-          completed: markCompleted && chapterIndex >= totalChapters - 1,
-          chapters: {
-            completed: completedArray,
-            scores: Array(totalChapters).fill(0),
-          },
-        },
-      });
-
-      return {
-        success: true,
-        progress: {
-          completed: newProgress.completed,
-          currentChapter: newProgress.currentChapter,
-          progressPercentage: calculateProgressPercentage(
-            newProgress,
-            totalChapters,
-          ),
-        },
-      };
-    }
-
-    const chaptersData = progress.chapters as {
-      completed: boolean[];
-      scores: number[];
-    };
-
-    const updatedChaptersCompleted = [
-      ...(chaptersData.completed.length === totalChapters
-        ? chaptersData.completed
-        : defaultChapters.completed),
-    ];
-
-    const updatedChaptersScores = [
-      ...(chaptersData.scores.length === totalChapters
-        ? chaptersData.scores
-        : defaultChapters.scores),
-    ];
-
-    if (chapterIndex < totalChapters) {
-      updatedChaptersCompleted[chapterIndex] = markCompleted;
-
-      if (score !== undefined) {
-        updatedChaptersScores[chapterIndex] = score;
-      }
-    }
-
-    for (let i = 0; i < chapterIndex; i++) {
-      if (i < totalChapters) {
-        updatedChaptersCompleted[i] = true;
-      }
-    }
-
-    const allChaptersCompleted = updatedChaptersCompleted.every(
-      (completed) => completed,
-    );
-    const finalCompleted = markCompleted
-      ? allChaptersCompleted
-      : progress.completed;
-
-    const updatedProgress = await prisma.progress.update({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId,
-        },
-      },
-      data: {
-        currentChapter: Math.min(chapterIndex, totalChapters - 1),
-        completed: finalCompleted,
-        chapters: {
-          completed: updatedChaptersCompleted,
-          scores: updatedChaptersScores,
-        },
-      },
-    });
-
-    return {
-      success: true,
-      progress: {
-        completed: updatedProgress.completed,
-        currentChapter: updatedProgress.currentChapter,
-        progressPercentage: calculateProgressPercentage(
-          updatedProgress,
-          totalChapters,
-        ),
-      },
-    };
-  } catch (error) {
-    console.error("Error updating progress:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "Failed to update progress",
     };
   }
 }

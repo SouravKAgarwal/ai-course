@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { useState } from "react";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,22 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  BookOpen,
-  Clock,
-  Calendar,
-  User,
-  Play,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-} from "lucide-react";
+import { BookOpen, Clock, Calendar, User, Play } from "lucide-react";
 import { Course } from "@/types/course-gemini-creation";
 import { cn, getLevelColor } from "@/lib/utils";
 
@@ -58,7 +41,7 @@ const PieChartProgress = ({
           strokeWidth={strokeWidth}
           fill="transparent"
         />
-        <motion.circle
+        <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
@@ -67,9 +50,6 @@ const PieChartProgress = ({
           fill="transparent"
           strokeDasharray={strokeDasharray}
           strokeDashoffset={strokeDashoffset}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset }}
-          transition={{ duration: 1, ease: "easeOut" }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center text-xs font-bold">
@@ -80,19 +60,8 @@ const PieChartProgress = ({
 };
 
 export function CourseCard({ course }: CourseCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isOptionsOpen, setIsOptionsOpen] = useState(false);
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ y: -8 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      className="h-full"
-    >
+    <div className="h-full">
       <Card className="group relative flex h-full flex-col gap-3 overflow-hidden border-4 border-black bg-white shadow-[8px_8px_0_0_#000] transition-all duration-300 hover:shadow-[12px_12px_0_0_#000]">
         <CardHeader className="relative z-10 pb-3">
           <div className="mb-2 flex items-start justify-between">
@@ -105,17 +74,14 @@ export function CourseCard({ course }: CourseCardProps) {
               {course.level.charAt(0).toUpperCase() + course.level.slice(1)}
             </Badge>
 
-            <motion.div
-              animate={{ scale: isHovered ? 1.1 : 1 }}
-              className="text-muted-foreground flex items-center text-xs font-bold"
-            >
+            <div className="text-muted-foreground flex items-center text-xs font-bold">
               <Calendar className="mr-1 h-3 w-3" />
               {new Date(course.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",
               })}
-            </motion.div>
+            </div>
           </div>
 
           <CardTitle className="group-hover:text-primary flex items-center gap-4 text-xl font-bold transition-all duration-300">
@@ -147,11 +113,7 @@ export function CourseCard({ course }: CourseCardProps) {
         </CardContent>
 
         <CardFooter className="relative z-10 flex gap-2">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex-1"
-          >
+          <div className="flex-1">
             <Button
               asChild
               className="w-full border-2 border-black bg-white font-bold text-black shadow-[4px_4px_0_0_#000] transition-all hover:bg-black hover:text-white hover:shadow-[2px_2px_0_0_#000]"
@@ -171,47 +133,9 @@ export function CourseCard({ course }: CourseCardProps) {
                 )}
               </Link>
             </Button>
-          </motion.div>
-
-          <DropdownMenu open={isOptionsOpen} onOpenChange={setIsOptionsOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 border-2 border-black bg-white font-bold text-black shadow-[4px_4px_0_0_#000] transition-all hover:bg-black hover:text-white hover:shadow-[2px_2px_0_0_#000]"
-              >
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="border-2 border-black bg-white p-2"
-            >
-              <DropdownMenuItem
-                asChild
-                className="focus:bg-black focus:text-white"
-              >
-                <Link
-                  href={`/courses/${course.id}/edit`}
-                  className="cursor-pointer font-bold"
-                >
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive focus:text-destructive cursor-pointer font-bold focus:bg-black"
-                onClick={() => {
-                  setIsOptionsOpen(false);
-                }}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          </div>
         </CardFooter>
       </Card>
-    </motion.div>
+    </div>
   );
 }

@@ -18,34 +18,29 @@ import {
 } from "lucide-react";
 import type {
   Question,
-  Course,
   Chapter,
   Resource,
 } from "@/types/course-gemini-creation";
 import Markdown from "markdown-to-jsx";
 
 interface CourseContentProps {
-  course: Course;
   currentChapter: Chapter;
   currentChapterIndex: number;
   activeTab: string;
   onTabChange: (tab: string) => void;
   onChapterComplete: () => void;
   onPreviousChapter: () => void;
-  isUpdatingProgress: boolean;
   isLastChapter: boolean;
   hasQuiz: boolean;
 }
 
 export function CourseContent({
-  course,
   currentChapter,
   currentChapterIndex,
   activeTab,
   onTabChange,
   onChapterComplete,
   onPreviousChapter,
-  isUpdatingProgress,
   isLastChapter,
   hasQuiz,
 }: CourseContentProps) {
@@ -70,22 +65,6 @@ export function CourseContent({
           <CardDescription className="font-medium text-gray-700">
             {currentChapter.summary}
           </CardDescription>
-
-          {course.progress && (
-            <div className="flex items-center gap-2 text-xs font-medium">
-              <div className="h-2 w-20 rounded-full border border-black bg-white">
-                <div
-                  className="h-full rounded-full border-r border-black bg-green-500"
-                  style={{
-                    width: `${((currentChapterIndex + 1) / course.chapters.length) * 100}%`,
-                  }}
-                />
-              </div>
-              <span>
-                Chapter {currentChapterIndex + 1} of {course.chapters.length}
-              </span>
-            </div>
-          )}
         </div>
       </CardHeader>
 
@@ -135,7 +114,7 @@ export function CourseContent({
 
               <Markdown
                 options={{ wrapper: "article" }}
-                className="prose max-w-none rounded-lg border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                className="prose max-w-none"
               >
                 {currentChapter.content_text}
               </Markdown>
@@ -272,7 +251,6 @@ export function CourseContent({
 
           <Button
             onClick={onChapterComplete}
-            disabled={isUpdatingProgress}
             className="border-2 border-black bg-green-500 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLastChapter ? "Complete Course" : "Complete Chapter"}

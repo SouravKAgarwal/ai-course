@@ -3,10 +3,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Merriweather } from "next/font/google";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/sonner";
 
 const merriweather = Merriweather({
   subsets: ["latin"],
-  preload: true,
   display: "swap",
 });
 
@@ -31,6 +31,20 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            theme="light"
+            expand={true}
+            toastOptions={{
+              duration: 4000,
+              style: {
+                border: "2px solid #000",
+                boxShadow: "4px 4px 0 0 rgb(0,0,0)",
+              },
+            }}
+          />
         </body>
       </html>
     </ClerkProvider>

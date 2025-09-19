@@ -1,22 +1,20 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { getCourseAction } from "@/app/actions/course-actions";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CourseClient from "@/components/course/course-client";
+import { Suspense } from "react";
+
+export const experimental_ppr = true;
 
 interface PageProps {
   params: Promise<{ courseId: string }>;
 }
 
 export default async function CoursePage({ params }: PageProps) {
-  const user = await currentUser();
   const { courseId } = await params;
 
-  if (!user) redirect("/");
-
-  const result = await getCourseAction(user.id, courseId);
+  const result = await getCourseAction(courseId);
 
   if (result.error || !result.course) {
     return (
@@ -45,5 +43,9 @@ export default async function CoursePage({ params }: PageProps) {
     );
   }
 
-  return <CourseClient initialCourse={result.course} userId={user.id} />;
+  return (
+    <Suspense>
+      <CourseClient course={result.course} />
+    </Suspense>
+  );
 }

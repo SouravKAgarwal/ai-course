@@ -9,8 +9,9 @@ import {
 } from "@/app/actions/course-actions";
 import CourseForm from "./course-form";
 import type { Course, CourseInput } from "@/types/course-gemini-creation";
+import { toast } from "sonner";
 
-export default function CourseGeneratorClient() {
+export default function CourseGenerator() {
   const { user } = useUser();
   const router = useRouter();
   const [isGenerating, setIsGenerating] = useState(false);
@@ -34,45 +35,77 @@ export default function CourseGeneratorClient() {
   };
 
   const handleGenerateCourse = async () => {
+    if (!formData.keyword.trim()) {
+      toast.error("Please enter a course topic", {
+        description: "Course topic is required to generate content",
+        duration: 4000,
+      });
+      return;
+    }
+
     setIsGenerating(true);
     setGeneratedCourse(null);
 
-    try {
-      const result = await generateCourseAction(formData);
-
-      if (result.error) {
-        alert(`Error: ${result.error}`);
-      } else {
+    toast.promise(generateCourseAction(formData), {
+      loading: "🤖 AI is creating your course...",
+      success: (result) => {
+        if (result.error) {
+          throw new Error(result.error);
+        }
         setGeneratedCourse(result.course);
-      }
-    } catch (error) {
-      alert("Failed to generate course. Please try again.");
-      console.error(error);
-    } finally {
-      setIsGenerating(false);
-    }
+        return "✨ Course generated successfully!";
+      },
+      error: (error) => {
+        console.error("Course generation error:", error);
+        return error.message || "Failed to generate course. Please try again.";
+      },
+      finally: () => {
+        setIsGenerating(false);
+      },
+    });
   };
 
   const handleSaveCourse = async () => {
-    if (!generatedCourse || !user) return;
+    if (!generatedCourse) {
+      toast.error("No course to save", {
+        description: "Please generate a course first",
+      });
+      return;
+    }
+
+    if (!user) {
+      toast.error("Authentication required", {
+        description: "Please sign in to save your course",
+        action: {
+          label: "Sign In",
+          onClick: () => (window.location.href = "/sign-in"),
+        },
+      });
+      return;
+    }
 
     setIsSaving(true);
 
-    try {
-      const result = await saveCourseAction(generatedCourse);
-
-      if (result.error) {
-        alert(`Error: ${result.error}`);
-      } else {
-        alert("Course saved successfully!");
-        router.push(`/courses/${result.courseId}`);
-      }
-    } catch (error) {
-      alert("Failed to save course. Please try again.");
-      console.error(error);
-    } finally {
-      setIsSaving(false);
-    }
+    toast.promise(saveCourseAction(generatedCourse), {
+      loading: "💾 Saving your course...",
+      success: (result) => {
+        if (result.error) {
+          throw new Error(result.error);
+        }
+        // Navigate after successful save
+        setTimeout(() => {
+          router.push(`/courses/${result.courseId}`);
+        }, 1500);
+        return "🎉 Course saved successfully!";
+      },
+      error: (error) => {
+        console.error("Course save error:", error);
+        return error.message || "Failed to save course. Please try again.";
+      },
+      finally: () => {
+        setIsSaving(false);
+      },
+    });
   };
 
   return (
